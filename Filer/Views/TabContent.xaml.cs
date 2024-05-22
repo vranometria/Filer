@@ -30,6 +30,12 @@ namespace Filer.Views
             InitializeComponent();
         }
 
+        public TabContent(string path): this()
+        {
+            UrlTextBox.Text = path;
+            ShowFileList(path);
+        }
+
         private void ShowFileList(string directryPath)
         {
             if (string.IsNullOrEmpty(directryPath)){ return; }
@@ -49,10 +55,22 @@ namespace Filer.Views
 
         private void FileViewList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var fileView = (FileView)FileViewList.SelectedItem;
-            if (fileView.ObjectType == ObjectType.Directory){ 
-                UrlTextBox.Text = fileView.Path;
-                ShowFileList(fileView.Path); 
+            try
+            {
+                var fileView = (FileView)FileViewList.SelectedItem;
+                if (fileView.ObjectType == ObjectType.Directory)
+                {
+                    UrlTextBox.Text = fileView.Path;
+                    ShowFileList(fileView.Path);
+                }
+                else
+                {
+                    Utils.Execute(fileView.Path);
+                }
+            }
+            catch (UnauthorizedAccessException unauthorized)
+            {
+                MessageBox.Show(unauthorized.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

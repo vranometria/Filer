@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,6 +24,18 @@ namespace Filer
             InitializeComponent();
         }
 
+        private void OpenTabPage(string path, string tabName = "")
+        {
+            TabItem tabItem = new()
+            {
+                Content = new TabContent(path),
+                Width = double.NaN,
+                Header = tabName,
+            };
+            Tab.Items.Add(tabItem);
+            Tab.SelectedItem = tabItem;
+        }
+
         private void TabAddMenuItem_Click(object sender, RoutedEventArgs e)
         {
             TabItem tabItem = new() { 
@@ -43,6 +56,16 @@ namespace Filer
                     Header = bookmark.Name,
                     Foreground = Brushes.White,
                     Background = new SolidColorBrush(Color.FromRgb(67, 67, 68)),
+                };
+                menuItem.Click += (sender, e) => {
+                    if (bookmark.IsFolder)
+                    {
+                        OpenTabPage(bookmark.Path, bookmark.Name);
+                    }
+                    else
+                    {
+                        Utils.Execute(bookmark.Path);
+                    }
                 };
                 BookmarkMenuItem.Items.Add(menuItem);
             });
