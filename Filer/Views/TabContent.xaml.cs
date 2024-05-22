@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.IO;
+using Filer.Models;
+using System.Security.Policy;
 
 namespace Filer.Views
 {
@@ -25,31 +27,29 @@ namespace Filer.Views
             InitializeComponent();
         }
 
+        private void ShowFileList(string directryPath)
+        {
+            if (string.IsNullOrEmpty(directryPath)){ return; }
+
+            FileViewList.Items.Clear();
+            if (Directory.Exists(directryPath)){ Utils.GetObjects(directryPath).ForEach(o => FileViewList.Items.Add(new FileView(o)));}
+        }
+
         private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
             {
                 var url = UrlTextBox.Text;
-                if (string.IsNullOrEmpty(url))
-                {
-                    return;
-                }
+                ShowFileList(url);
+            }
+        }
 
-                FileViewList.Items.Clear();
-
-                //ディレクトリが存在する場合は、中身のファイルをStackAreaに表示
-                if (Directory.Exists(url))
-                {
-                    foreach (var file in Directory.GetFiles(url))
-                    {
-                        FileViewList.Items.Add(new FileView(file));
-                    }
-
-                    foreach (var dir in Directory.GetDirectories(url))
-                    {
-                        FileViewList.Items.Add(new FileView(dir));
-                    }
-                }
+        private void FileViewList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var fileView = (FileView)FileViewList.SelectedItem;
+            if (fileView.ObjectType == ObjectType.Directory){ 
+                UrlTextBox.Text = fileView.Path;
+                ShowFileList(fileView.Path); 
             }
         }
     }

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.IO;
+using Filer.Models;
 
 namespace Filer.Views
 {
@@ -20,7 +21,9 @@ namespace Filer.Views
     /// </summary>
     public partial class FileView : UserControl
     {
-        private string FilePath { get; set; } = "";
+        public string Path { get; private set; } = "";
+
+        public ObjectType ObjectType { get; private set; }
 
 
         public FileView()
@@ -28,15 +31,16 @@ namespace Filer.Views
             InitializeComponent();
         }
 
-        public FileView(string filePath):this()
+        public FileView(string path):this()
         {
-            FilePath = filePath;
+            Path = path;
+            ObjectType = File.GetAttributes(path).HasFlag(FileAttributes.Directory) ? ObjectType.Directory : ObjectType.File;
         }
 
         private void FileNameLabel_Loaded(object sender, RoutedEventArgs e)
         {
             Label label = (Label)sender;
-            label.Content = Path.GetFileName(FilePath);
+            label.Content = System.IO.Path.GetFileName(Path);
         }
     }
 }
