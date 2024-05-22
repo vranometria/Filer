@@ -22,6 +22,9 @@ namespace Filer.Views
     /// </summary>
     public partial class TabContent : UserControl
     {
+        private AppDataManager AppDataManager { get; set; } = AppDataManager.GetInstance;
+
+
         public TabContent()
         {
             InitializeComponent();
@@ -51,6 +54,14 @@ namespace Filer.Views
                 UrlTextBox.Text = fileView.Path;
                 ShowFileList(fileView.Path); 
             }
+        }
+
+        private void BookmarkContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var fileView = (FileView)FileViewList.SelectedItem;
+            if (fileView == null) { return; }
+
+            AppDataManager.AddBookmark(new Bookmark(fileView.Path));
         }
     }
 }

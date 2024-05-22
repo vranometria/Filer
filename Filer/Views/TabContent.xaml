@@ -10,7 +10,13 @@
         <Grid Height="25" VerticalAlignment="Top">
             <TextBox x:Name="UrlTextBox" Height="18" TextWrapping="Wrap" Text="" VerticalAlignment="Top" KeyDown="UrlTextBox_KeyDown"/>
         </Grid>
-        <ListBox x:Name="FileViewList" Margin="0,30,0,0" MouseDoubleClick="FileViewList_MouseDoubleClick"/>
+        <ListBox x:Name="FileViewList" Margin="0,30,0,0" MouseDoubleClick="FileViewList_MouseDoubleClick">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="BookmarkContextMenuItem" Header="ブックマークする" Click="BookmarkContextMenuItem_Click" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
 
     </Grid>
 </UserControl>

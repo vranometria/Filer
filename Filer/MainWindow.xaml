@@ -12,6 +12,7 @@
             <MenuItem  Header="Menu">
                 <MenuItem x:Name="TabAddMenuItem" Click="TabAddMenuItem_Click" Background="#FF434344" Foreground="White" Header="タブを追加"/>
             </MenuItem>
+            <MenuItem  x:Name="BookmarkMenuItem" Header="Bookmarks" MouseEnter="BookmarkMenuItem_MouseEnter"/>
         </Menu>
         <TabControl x:Name="Tab" Margin="10,25,10,10"/>
     </Grid>

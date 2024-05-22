@@ -16,6 +16,8 @@ namespace Filer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private AppDataManager AppDataManager { get; set; } = AppDataManager.GetInstance;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +31,21 @@ namespace Filer
             };
             Tab.Items.Add(tabItem);
             Tab.SelectedItem = tabItem;
+        }
+
+        private void BookmarkMenuItem_MouseEnter(object sender, MouseEventArgs e)
+        {
+            BookmarkMenuItem.Items.Clear();
+            AppDataManager.GetBookmarks().ForEach(bookmark =>
+            {
+                MenuItem menuItem = new()
+                {
+                    Header = bookmark.Name,
+                    Foreground = Brushes.White,
+                    Background = new SolidColorBrush(Color.FromRgb(67, 67, 68)),
+                };
+                BookmarkMenuItem.Items.Add(menuItem);
+            });
         }
     }
 }
