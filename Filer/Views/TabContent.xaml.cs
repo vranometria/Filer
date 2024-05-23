@@ -171,6 +171,13 @@ namespace Filer.Views
 
         private void FileViewList_KeyDown(object sender, KeyEventArgs e)
         {
+            if(e.Key == Key.Enter && FileViewList.SelectedItem != null)
+            {
+                FileView fileView = (FileView)FileViewList.SelectedItem;
+                MovePage(fileView.FilePath);
+                return;
+            }
+
             // backspaceキーが押された場合はsearchTextBoxのテキストの最後尾を削除する
             if (e.Key == Key.Back && SearchTextBox.Text.Length > 0)
             {
