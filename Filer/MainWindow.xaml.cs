@@ -61,12 +61,15 @@ namespace Filer
                     AppDataManager.UpdateBookmark(bookmark);
                 };
 
+                MenuItem removeMenuItem = new() { Header = "Remove", Background = Utils.Background, Foreground = Brushes.White};
+                removeMenuItem.Click += (s, args) => { AppDataManager.RemoveBookmark(bookmark); };
+
                 MenuItem menuItem = new()
                 {
                     Header = bookmark.Name,
                     Foreground = Brushes.White,
                     Background = Utils.Background,
-                    ContextMenu = new ContextMenu(){ Items = {renameMenuItem} },
+                    ContextMenu = new ContextMenu(){ Items = {renameMenuItem, removeMenuItem} },
                 };
                 menuItem.Click += (sender, e) => {
                     if (bookmark.IsFolder)

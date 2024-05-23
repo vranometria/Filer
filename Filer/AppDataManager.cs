@@ -32,5 +32,10 @@ namespace Filer
             var index = AppData.Bookmarks.FindIndex(b => b.Id == bookmark.Id);
             AppData.Bookmarks[index] = bookmark;
         }
+
+        public void RemoveBookmark(Bookmark bookmark)
+        {
+            AppData.Bookmarks.Remove(bookmark);
+        }
     }
 }
