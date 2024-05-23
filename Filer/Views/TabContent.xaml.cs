@@ -81,5 +81,15 @@ namespace Filer.Views
 
             AppDataManager.AddBookmark(new Bookmark(fileView.Path));
         }
+
+        private void UpLayerButton_Click(object sender, RoutedEventArgs e)
+        {
+            string currentPath = UrlTextBox.Text;
+            DirectoryInfo? parentDir = Directory.GetParent(currentPath);
+            if ( parentDir == null ){return;}
+
+            UrlTextBox.Text = parentDir.FullName;
+            ShowFileList(parentDir.FullName);
+        }
     }
 }
