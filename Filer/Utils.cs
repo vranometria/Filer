@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace Filer
 {
@@ -84,6 +85,34 @@ namespace Filer
 
             // 移動元のディレクトリを削除
             Directory.Delete(sourceDir, true);
-        }   
+        }
+
+        public static bool IsAlphabetKey(Key key)
+        {
+            //a-zの場合はtrueを返す
+            if (key >= Key.A && key <= Key.Z) { return true; }
+
+            //0-9の場合はtrueを返す
+            if (key >= Key.D0 && key <= Key.D9) { return true; }
+
+            // -_の場合はtrueを返す
+            if (key == Key.OemMinus || key == Key.OemPeriod) { return true; }
+
+            return false;
+        }
+
+        public static bool IsNumberKey(Key key)
+        {
+            //0-9の場合はtrueを返す
+            if (key >= Key.D0 && key <= Key.D9) { return true; }
+
+            return false;
+        }
+
+        public static string GetNumberKeyString(Key key)
+        {
+            if (key >= Key.D0 && key <= Key.D9) { return key.ToString().Substring(1); }
+            return "";
+        }
     }
 }

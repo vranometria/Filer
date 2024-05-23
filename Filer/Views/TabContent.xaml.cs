@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.IO;
 using Filer.Models;
 using System.Security.Policy;
+using System.Printing;
 
 namespace Filer.Views
 {
@@ -24,6 +25,7 @@ namespace Filer.Views
     {
         private AppDataManager AppDataManager { get; set; } = AppDataManager.GetInstance;
 
+        private List<FileView> FileViews = new();
 
         public TabContent()
         {
@@ -33,20 +35,25 @@ namespace Filer.Views
         public TabContent(string path): this()
         {
             UrlTextBox.Text = path;
-            ShowFileList(path);
+            Reload();
         }
 
-        private void ShowFileList(string directryPath)
+        private void ShowFileList()
         {
-            if (string.IsNullOrEmpty(directryPath)){ return; }
-
             FileViewList.Items.Clear();
-            if (Directory.Exists(directryPath)){ Utils.GetObjects(directryPath).ForEach(o => FileViewList.Items.Add(new FileView(o)));}
+            FileViews.ForEach(fileView => FileViewList.Items.Add(fileView));
         }
 
         private void Reload() 
         {
-            ShowFileList(UrlTextBox.Text);
+            ShowFileList();
+        }
+
+        private void MovePage(string url) 
+        {
+            UrlTextBox.Text = url;
+            FileViews = Utils.GetObjects(url).Select(o => new FileView(o)).ToList();
+            ShowFileList();
         }
 
         private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -54,7 +61,11 @@ namespace Filer.Views
             if(e.Key == Key.Enter)
             {
                 var url = UrlTextBox.Text;
-                ShowFileList(url);
+
+                if (Directory.Exists(url))
+                {
+                    MovePage(url);
+                }
             }
         }
 
@@ -65,12 +76,11 @@ namespace Filer.Views
                 var fileView = (FileView)FileViewList.SelectedItem;
                 if (fileView.ObjectType == ObjectType.Directory)
                 {
-                    UrlTextBox.Text = fileView.Path;
-                    ShowFileList(fileView.Path);
+                    MovePage(fileView.FilePath);
                 }
                 else
                 {
-                    Utils.Execute(fileView.Path);
+                    Utils.Execute(fileView.FilePath);
                 }
             }
             catch (UnauthorizedAccessException unauthorized)
@@ -84,7 +94,7 @@ namespace Filer.Views
             var fileView = (FileView)FileViewList.SelectedItem;
             if (fileView == null) { return; }
 
-            AppDataManager.AddBookmark(new Bookmark(fileView.Path));
+            AppDataManager.AddBookmark(new Bookmark(fileView.FilePath));
         }
 
         private void UpLayerButton_Click(object sender, RoutedEventArgs e)
@@ -94,7 +104,7 @@ namespace Filer.Views
             if ( parentDir == null ){return;}
 
             UrlTextBox.Text = parentDir.FullName;
-            ShowFileList(parentDir.FullName);
+            MovePage(parentDir.FullName);
         }
 
         private void UserControl_Drop(object sender, DragEventArgs e)
@@ -137,7 +147,7 @@ namespace Filer.Views
             var fileView = (FileView)FileViewList.SelectedItem;
             if (fileView == null) { return; }
 
-            if (!Utils.IsObjectExists(fileView.Path)) 
+            if (!Utils.IsObjectExists(fileView.FilePath)) 
             {
                 Reload();
                 return;
@@ -148,14 +158,71 @@ namespace Filer.Views
             {
                 if (fileView.ObjectType == ObjectType.Directory)
                 {
-                    Directory.Delete(fileView.Path, true);
+                    Directory.Delete(fileView.FilePath, true);
                 }
                 else
                 {
-                    File.Delete(fileView.Path);
+                    File.Delete(fileView.FilePath);
                 }
                 Reload();
             }
+        }
+
+
+        private void FileViewList_KeyDown(object sender, KeyEventArgs e)
+        {
+            // backspaceキーが押された場合はsearchTextBoxのテキストの最後尾を削除する
+            if (e.Key == Key.Back && SearchTextBox.Text.Length > 0)
+            {
+                SearchTextBox.Text = SearchTextBox.Text.Substring(0, SearchTextBox.Text.Length - 1);
+                return;
+            }
+
+            if (Utils.IsAlphabetKey(e.Key) && e.Key != Key.OemMinus && e.Key != Key.OemPeriod )
+            {
+                SearchTextBox.Text += e.Key.ToString().ToLower();
+                return;
+            }
+
+            if(Utils.IsNumberKey(e.Key))
+            {
+                SearchTextBox.Text += Utils.GetNumberKeyString(e.Key);
+                return;
+            }
+
+            if(e.Key == Key.OemMinus)
+            {
+                SearchTextBox.Text += "-";
+                return;
+            }
+
+            if(e.Key == Key.OemPeriod)
+            {
+                SearchTextBox.Text += ".";
+                return;
+            }
+
+            if(e.Key == Key.OemComma) { SearchTextBox.Text += ","; return; }
+
+            if(Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && e.Key == Key.Oem102)
+            {
+                SearchTextBox.Text += "_";
+                return;
+            }
+
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchWord = SearchTextBox.Text;
+
+            if (string.IsNullOrEmpty(searchWord))
+            {
+                Reload();
+            }
+
+            FileViewList.Items.Clear();
+            FileViews.Where( fv => fv.FileName.ToLower().StartsWith(searchWord)).ToList().ForEach(fv => FileViewList.Items.Add(fv));
         }
     }
 }

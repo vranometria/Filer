@@ -10,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.IO;
 using Filer.Models;
 
@@ -21,10 +20,11 @@ namespace Filer.Views
     /// </summary>
     public partial class FileView : UserControl
     {
-        public string Path { get; private set; } = "";
+        public string FilePath { get; private set; } = "";
 
         public ObjectType ObjectType { get; private set; }
 
+        public string FileName => Path.GetFileName(FilePath);
 
         public FileView()
         {
@@ -33,14 +33,14 @@ namespace Filer.Views
 
         public FileView(string path):this()
         {
-            Path = path;
+            FilePath = path;
             ObjectType = File.GetAttributes(path).HasFlag(FileAttributes.Directory) ? ObjectType.Directory : ObjectType.File;
         }
 
         private void FileNameLabel_Loaded(object sender, RoutedEventArgs e)
         {
             Label label = (Label)sender;
-            label.Content = System.IO.Path.GetFileName(Path);
+            label.Content = System.IO.Path.GetFileName(FilePath);
         }
     }
 }

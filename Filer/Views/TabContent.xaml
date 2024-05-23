@@ -10,7 +10,7 @@
         <Grid Height="25" VerticalAlignment="Top">
             <TextBox x:Name="UrlTextBox" Height="18" TextWrapping="Wrap" Text="" VerticalAlignment="Top" KeyDown="UrlTextBox_KeyDown"/>
         </Grid>
-        <ListBox x:Name="FileViewList" Margin="0,52,0,0" MouseDoubleClick="FileViewList_MouseDoubleClick">
+        <ListBox x:Name="FileViewList" Margin="0,52,0,0" MouseDoubleClick="FileViewList_MouseDoubleClick" KeyDown="FileViewList_KeyDown">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="BookmarkContextMenuItem" Header="ブックマークする" Click="BookmarkContextMenuItem_Click" Background="{StaticResource BackgroundColor}" Foreground="White"/>
@@ -20,6 +20,7 @@
         </ListBox>
         <Grid Height="22" Margin="10,25,10,0" VerticalAlignment="Top">
             <Button x:Name="UpLayerButton" Content="⬆️" HorizontalAlignment="Left" Height="22" Margin="698,0,0,0" VerticalAlignment="Center" Width="37" Background="{StaticResource BackgroundColor}" Foreground="White" Click="UpLayerButton_Click"/>
+            <TextBox x:Name="SearchTextBox" HorizontalAlignment="Left" Height="22" Margin="500,0,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="183" TextChanged="SearchTextBox_TextChanged"/>
         </Grid>
 
     </Grid>
