@@ -26,5 +26,11 @@ namespace Filer
         {
             return AppData.Bookmarks;
         }
+
+        public void UpdateBookmark(Bookmark bookmark)
+        {
+            var index = AppData.Bookmarks.FindIndex(b => b.Id == bookmark.Id);
+            AppData.Bookmarks[index] = bookmark;
+        }
     }
 }

@@ -7,8 +7,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Filer.Views;
+using Microsoft.VisualBasic;
 
 namespace Filer
 {
@@ -51,11 +51,22 @@ namespace Filer
             BookmarkMenuItem.Items.Clear();
             AppDataManager.GetBookmarks().ForEach(bookmark =>
             {
+                // inputboxを表示してリネームする
+                MenuItem renameMenuItem = new() { Header = "Rename", Background = Utils.Background, Foreground = Brushes.White};
+                renameMenuItem.Click += (s, args) =>
+                {
+                    string name = Interaction.InputBox(bookmark.Name, "ブックマーク名を変更します");
+                    if (string.IsNullOrEmpty(name)) { return; }
+                    bookmark.Name = name;
+                    AppDataManager.UpdateBookmark(bookmark);
+                };
+
                 MenuItem menuItem = new()
                 {
                     Header = bookmark.Name,
                     Foreground = Brushes.White,
-                    Background = new SolidColorBrush(Color.FromRgb(67, 67, 68)),
+                    Background = Utils.Background,
+                    ContextMenu = new ContextMenu(){ Items = {renameMenuItem} },
                 };
                 menuItem.Click += (sender, e) => {
                     if (bookmark.IsFolder)

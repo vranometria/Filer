@@ -7,11 +7,14 @@ using System.Text;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Filer
 {
     public static class Utils
     {
+        public static readonly SolidColorBrush Background = new SolidColorBrush(Color.FromRgb(67, 67, 68));
+
         public static List<string> GetObjects(string directoryPath)
         {             
             var objects = new List<string>();
