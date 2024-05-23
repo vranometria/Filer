@@ -44,6 +44,11 @@ namespace Filer.Views
             if (Directory.Exists(directryPath)){ Utils.GetObjects(directryPath).ForEach(o => FileViewList.Items.Add(new FileView(o)));}
         }
 
+        private void Reload() 
+        {
+            ShowFileList(UrlTextBox.Text);
+        }
+
         private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
@@ -90,6 +95,67 @@ namespace Filer.Views
 
             UrlTextBox.Text = parentDir.FullName;
             ShowFileList(parentDir.FullName);
+        }
+
+        private void UserControl_Drop(object sender, DragEventArgs e)
+        {
+            //現在ディレクトリが存在しない場合は何もしない
+            if (!Directory.Exists(UrlTextBox.Text)) { return; }
+            string currentDir = UrlTextBox.Text;
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                List<string> paths = ((string[])e.Data.GetData(DataFormats.FileDrop)).ToList();
+
+                paths.ForEach(path =>
+                {
+                    //ファイルを現在フォルダに移動する
+                    string fileName = Path.GetFileName(path);
+                    string destPath = Path.Combine(currentDir, fileName);
+                    //すでに同名のファイルが存在する場合は確認メッセージを表示し、OKの場合は削除した後に移動する
+                    if (File.Exists(destPath))
+                    {
+                        MessageBoxResult result = MessageBox.Show($"{fileName}はすでに存在します。上書きしますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            Utils.DeleteObject(destPath);
+                            Utils.MoveObject(path, destPath);
+                            Reload();
+                        }
+                    }
+                    else 
+                    {
+                        Utils.MoveObject(path, destPath);
+                        Reload();
+                    }
+                });
+            }
+        }
+
+        private void DeleteContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var fileView = (FileView)FileViewList.SelectedItem;
+            if (fileView == null) { return; }
+
+            if (!Utils.IsObjectExists(fileView.Path)) 
+            {
+                Reload();
+                return;
+            }
+
+            MessageBoxResult result = MessageBox.Show($"{fileView.Name}を削除しますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                if (fileView.ObjectType == ObjectType.Directory)
+                {
+                    Directory.Delete(fileView.Path, true);
+                }
+                else
+                {
+                    File.Delete(fileView.Path);
+                }
+                Reload();
+            }
         }
     }
 }

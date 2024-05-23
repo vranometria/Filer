@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Filer.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" AllowDrop="True" Drop="UserControl_Drop">
     <Grid>
         <Grid Height="25" VerticalAlignment="Top">
             <TextBox x:Name="UrlTextBox" Height="18" TextWrapping="Wrap" Text="" VerticalAlignment="Top" KeyDown="UrlTextBox_KeyDown"/>
@@ -13,12 +13,13 @@
         <ListBox x:Name="FileViewList" Margin="0,52,0,0" MouseDoubleClick="FileViewList_MouseDoubleClick">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem x:Name="BookmarkContextMenuItem" Header="ブックマークする" Click="BookmarkContextMenuItem_Click" />
+                    <MenuItem x:Name="BookmarkContextMenuItem" Header="ブックマークする" Click="BookmarkContextMenuItem_Click" Background="{StaticResource BackgroundColor}" Foreground="White"/>
+                    <MenuItem x:Name="DeleteContextMenuItem" Header="削除する" Background="{StaticResource BackgroundColor}" Foreground="White" Click="DeleteContextMenuItem_Click"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
         <Grid Height="22" Margin="10,25,10,0" VerticalAlignment="Top">
-            <Button x:Name="UpLayerButton" Content="⬆️" HorizontalAlignment="Left" Height="22" Margin="698,0,0,0" VerticalAlignment="Center" Width="37" Background="White" Foreground="Black" Click="UpLayerButton_Click"/>
+            <Button x:Name="UpLayerButton" Content="⬆️" HorizontalAlignment="Left" Height="22" Margin="698,0,0,0" VerticalAlignment="Center" Width="37" Background="{StaticResource BackgroundColor}" Foreground="White" Click="UpLayerButton_Click"/>
         </Grid>
 
     </Grid>
