@@ -6,13 +6,16 @@
         xmlns:local="clr-namespace:Filer"
         xmlns:Views="clr-namespace:Filer.Views" x:Class="Filer.MainWindow"
         mc:Ignorable="d"
-        Title="Filer" Height="450" Width="800">
+        Title="Filer" Height="450" Width="800" Closing="Window_Closing">
     <Grid>
         <Menu Height="20" VerticalAlignment="Top" Background="{StaticResource BackgroundColor}" Foreground="White">
             <MenuItem  Header="Menu">
                 <MenuItem x:Name="TabAddMenuItem" Click="TabAddMenuItem_Click" Background="{StaticResource BackgroundColor}" Foreground="White" Header="タブを追加"/>
             </MenuItem>
             <MenuItem  x:Name="BookmarkMenuItem" Header="Bookmarks" MouseEnter="BookmarkMenuItem_MouseEnter"/>
+            <MenuItem  x:Name="SettingMenuItem" Header="Settings">
+                <MenuItem x:Name="HotkeySettingMenuItem" Background="{StaticResource BackgroundColor}" Foreground="White" Header="Hotkey" Click="HotkeySettingMenuItem_Click"/>
+            </MenuItem>
         </Menu>
         <TabControl x:Name="Tab" Margin="10,25,10,10"/>
     </Grid>

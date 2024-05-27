@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Filer.Models;
 using Filer.Views;
 using Microsoft.VisualBasic;
 
@@ -19,9 +20,12 @@ namespace Filer
     {
         private AppDataManager AppDataManager { get; set; } = AppDataManager.GetInstance;
 
+        private HotkeyHelper HotkeyHelper { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+            HotkeyHelper = new HotkeyHelper(this);
         }
 
         private void OpenTabPage(string path, string tabName = "")
@@ -83,6 +87,17 @@ namespace Filer
                 };
                 BookmarkMenuItem.Items.Add(menuItem);
             });
+        }
+
+        private void HotkeySettingMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            HotkeySettingWindow window = new(HotkeyHelper);
+            window.Show();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            HotkeyHelper.UnregisterAll();
         }
     }
 }
