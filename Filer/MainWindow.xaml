@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Filer"
         xmlns:Views="clr-namespace:Filer.Views" x:Class="Filer.MainWindow"
         mc:Ignorable="d"
-        Title="Filer" Height="450" Width="800" Closing="Window_Closing">
+        Title="Filer" Height="450" Width="800" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
         <Menu Height="20" VerticalAlignment="Top" Background="{StaticResource BackgroundColor}" Foreground="White">
             <MenuItem  Header="Menu">

@@ -22,6 +22,8 @@ namespace Filer.Views
     {
         private HotkeyHelper? HotkeyHelper { get; set; }
 
+        private AppDataManager AppDataManager { get; set; } = AppDataManager.GetInstance;
+
         public HotkeySettingWindow()
         {
             InitializeComponent();
@@ -63,6 +65,9 @@ namespace Filer.Views
                 if( isSuccess )
                 {
                     MessageBox.Show("Register hotkey successfully.");
+                    var hotkey = new Hotkey() { Key = key, Control = ctrl == true, Alt = alt == true, Shift = shift == true, Activate = true  };
+                    AppDataManager.SetHotkey(hotkey);
+                    AppDataManager.Save();
                 }
                 else
                 {

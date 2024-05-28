@@ -9,5 +9,7 @@ namespace Filer.Models
     public class AppData
     {
         public List<Bookmark> Bookmarks { get; set; } = [];
+
+        public Hotkey Hotkey { get; set; } = new Hotkey();
     }
 }

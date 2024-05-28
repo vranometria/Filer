@@ -114,5 +114,14 @@ namespace Filer
             if (key >= Key.D0 && key <= Key.D9) { return key.ToString().Substring(1); }
             return "";
         }
+
+        public static ModifierKeys GetModifireKey(bool isControl, bool isAlt, bool isShift)
+        {
+            ModifierKeys modifierKeys =  ModifierKeys.None;
+            if (isControl) { modifierKeys |= ModifierKeys.Control; }
+            if (isAlt) { modifierKeys |= ModifierKeys.Alt; }
+            if (isShift) { modifierKeys |= ModifierKeys.Shift; }
+            return modifierKeys;
+        }
     }
 }

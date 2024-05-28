@@ -50,6 +50,19 @@ namespace Filer
             Tab.SelectedItem = tabItem;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (AppDataManager.IsHotkeySet())
+            {
+                var hotkey = AppDataManager.Hotkey;
+                bool isSuccess = HotkeyHelper.RegisterActivateEvent(hotkey.ModifierKeys, hotkey.Key);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("Failed to register hotkey.");
+                }
+            }
+        }
+
         private void BookmarkMenuItem_MouseEnter(object sender, MouseEventArgs e)
         {
             BookmarkMenuItem.Items.Clear();
@@ -98,6 +111,7 @@ namespace Filer
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             HotkeyHelper.UnregisterAll();
+            AppDataManager.Save();
         }
     }
 }
